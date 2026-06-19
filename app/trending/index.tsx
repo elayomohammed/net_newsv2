@@ -38,20 +38,63 @@ const listData = [
 const filteredListData = listData.filter(data => data.age !== undefined);
 
 export default function Index() {
-    const [users, setUsers] = useState<any>([]);
-    const [lazyLoadUser, setLazyLoadUsers] = useState<any>([])
+    const [posts, setPosts] = useState<any>([]);
+    const [lazyLoadedPost, setLazyLoadedPosts] = useState<any>([]);
     const [pageCount, setPageCount] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [hasMorePosts, setHasMorePosts] = useState<boolean>(true);
 
     // function to handle fetching next list page
-    function fetchNextPage() {
-
+    const fetchNextPage = () => {
+        console.log('fethching next page...')
+        if (isLoading && !hasMorePosts) return;
+        if (pageCount === 0) {
+            setIsLoading(true);
+            let pagePosts = [];
+            for (let count = 0; count <= posts[count + 9]; count++) {
+                pagePosts.push(posts[count]);
+            }
+            console.log('loaded posts', pagePosts);
+            setLazyLoadedPosts([...lazyLoadedPost, ...pagePosts]);
+            setPageCount(pageCount => pageCount += 1);
+        } else if (pageCount === 1) {
+            let pagePosts = [];
+            for (let count = 10; count <= posts[count + 19]; count++) {
+                pagePosts.push(posts[count]);
+            }
+            setLazyLoadedPosts([...lazyLoadedPost, ...pagePosts]);
+            setPageCount(pageCount => pageCount += 1)
+        } else if (pageCount === 2) {
+            let pagePosts = [];
+            for (let count = 20; count <= posts[count + 29]; count++) {
+                pagePosts.push(posts[count]);
+            }
+            setLazyLoadedPosts([...lazyLoadedPost, ...pagePosts]);
+            setPageCount(pageCount => pageCount += 1)
+        } else if (pageCount === 3) {
+            let pagePosts = [];
+            for (let count = 30; count <= posts[count + 39]; count++) {
+                pagePosts.push(posts[count]);
+            }
+            setLazyLoadedPosts([...lazyLoadedPost, ...pagePosts]);
+            setPageCount(pageCount => pageCount += 1)
+        } else if (pageCount === 4) {
+            let pagePosts = [];
+            for (let count = 40; count <= posts[count + 49]; count++) {
+                pagePosts.push(posts[count]);
+            }
+            setLazyLoadedPosts([...lazyLoadedPost, ...pagePosts]);
+            setPageCount(pageCount => pageCount += 1)
+            setHasMorePosts(false)
+        }
     }
+
     useEffect(() => {
         async function fetchUserData() {
             try {
                 window.addEventListener('offline', () => {
                     let offlineInfo = 'error no internet available'
-                    setUsers([...users, offlineInfo]);
+                    setPosts([...posts, offlineInfo]);
                     return;
                 })
                 let usersEndpoint = 'https://jsonplaceholder.typicode.com/users'
@@ -60,11 +103,11 @@ export default function Index() {
                 const data = await res.json();
                 if (data.length > 0) {
                     console.log("data", data);
-                    setUsers([...users, data]);
+                    setPosts([...posts, data]);
                     return;
                 } else {
                     let fetchingErrorInfo = 'error or no users data available';
-                    setUsers([...users, fetchingErrorInfo]);
+                    setPosts([...posts, fetchingErrorInfo]);
                     return;
                 }
             } catch (err) {
@@ -72,8 +115,10 @@ export default function Index() {
             }
         }
         fetchUserData();
-        console.log("users", users[0]);
-    }, [])
+        fetchNextPage();
+        console.log("lazyLoad Posts", lazyLoadedPost[0]);
+    }, [fetchNextPage]);
+
     return (
         <View style={styles.container}>
             {/* <Text><h1>List Data</h1></Text>
@@ -102,20 +147,22 @@ export default function Index() {
 
             <Text><h1>User List Data</h1></Text>
             {
-                users.length > 0 ?
+                lazyLoadedPost[0].length > 0 ?
                     <FlatList
 
-                        data={users[0]}
+                        data={lazyLoadedPost[0]}
                         renderItem={({ item, index }) => {
                             return (
-                                <UserView id={item.id} name={item.title} email={item.email} phone={item.phone} title={item.title} body={item.body} />
+                                <UserView id={item.id} name={item.name} email={item.email} phone={item.phone} title={item.title} body={item.body} />
                             )
                         }}
-                    // onEndReached prop expect a function that fetches new list page
-                    /> : <View>{users[0]}</View>
+                        // onEndReached prop expect a function that fetches new list page
+                        onEndReached={fetchNextPage}
+                    /> : <View>no posts available</View>
             }
         </View>
     )
+
 }
 
 const styles = StyleSheet.create({
