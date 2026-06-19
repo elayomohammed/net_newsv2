@@ -1,6 +1,8 @@
 import { Text, View } from "react-native";
-
+import { useContext } from "react";
+import StudentContext from "@/context/context";
 export default function Index() {
+  const { studentInfo, setStudentInfo } = useContext(StudentContext);
   return (
     <View
       style={{
@@ -10,6 +12,7 @@ export default function Index() {
       }}
     >
       <Text>Index screen</Text>
+      <Text>Username: {studentInfo.username}</Text>
     </View>
   );
 }
