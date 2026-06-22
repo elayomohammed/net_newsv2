@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
 import { useTrendingNewsContext } from './_layout'
 
 export default function Entertainment() {
@@ -11,11 +11,11 @@ export default function Entertainment() {
     return (
         <View style={styles.container}>
             <Text>{trendingNews.id}</Text>
-            <form onSubmit={(event => handleFormData(event))}>
-                <input type='text' name='title' />
-                <input type='submit' value='update title' />
-            </form>
-            <h1><Text>Trending Entertainment News</Text></h1>
+            <View>
+                <TextInput placeholder='enter title' />
+                <Button title='submit' onPress={handleFormData} />
+            </View>
+            <Text>Trending Entertainment News</Text>
             <Text>Post title: {trendingNews.title}</Text>
         </View>
     )

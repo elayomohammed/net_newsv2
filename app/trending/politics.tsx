@@ -9,7 +9,7 @@ export default function Politics() {
     return (
         <View style={styles.container}>
             <Text>{trendingNews.id}</Text>
-            <Text><h1>Trending Political News</h1></Text>
+            <Text>Trending Political News</Text>
         </View>
     )
 }

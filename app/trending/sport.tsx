@@ -5,7 +5,7 @@ export default function Sport() {
     const { trendingNews } = useTrendingNewsContext();
     return (
         <View style={styles.container}>
-            <h1><Text>Trending Sport News</Text></h1>
+            <Text>Trending Sport News</Text>
             <Text>{trendingNews.title}</Text>
         </View>
     )
